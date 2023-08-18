@@ -92,13 +92,13 @@ curl -X POST http://localhost:4002/articles -H "Content-Type: application/json" 
 Get articles filtered by author:
 
 ```bash
-curl http://localhost:4002/articles
+curl http://localhost:4002/articles?author=John
 ```
 
-Get articles filtered by author:
+Get articles filtered by author and query:
 
 ```bash
-curl http://localhost:4002/articles?author=John
+curl http://localhost:4002/articles?author=John&query=Sample
 Endpoints
 ```
 
