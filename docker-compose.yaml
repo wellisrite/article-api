@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  article-api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    container_name: article-api
+    image: article-api
+    restart: always
+    ports:
+      - "4002:4002"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+        tag: "{{.Name}}"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - mynetwork
+  redis:
+    image: redis:latest
+    environment:
+      REDIS_HOST: ${ARTICLE_API_REDIS_HOST}
+    command: >
+          --requirepass ${ARTICLE_API_REDIS_PASSWORD}
+    ports:
+      - '6379:6379'
+    volumes:
+      - redisdata:/data
+    networks:
+      - mynetwork
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${ARTICLE_API_DB_NAME}
+      POSTGRES_USER: ${ARTICLE_API_DB_USER}
+      POSTGRES_PASSWORD: ${ARTICLE_API_DB_PASSWORD}
+      DATABASE_HOST: ${SQL_HOST}
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+volumes:
+  api:
+  pgdata:
+  redisdata:
+networks:
+  mynetwork:
+    driver: bridge
